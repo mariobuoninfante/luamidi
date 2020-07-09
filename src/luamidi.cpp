@@ -80,7 +80,7 @@ static RtMidiOut* toMidiOut(lua_State *L, int index)
 {
 	RtMidiOut **midiout = (RtMidiOut**)lua_touserdata(L, index);
 	if(midiout == NULL)
-		luaL_typerror(L, index, MIDIOUT);
+		luaL_argerror(L, index, MIDIOUT);
 	return *midiout;
 }
 
@@ -91,7 +91,7 @@ static RtMidiOut* checkMidiOut(lua_State* L, int index)
 	luaL_checktype(L, index, LUA_TUSERDATA);
 	midiout = (RtMidiOut**)luaL_checkudata(L, index, MIDIOUT);
 	if(midiout == NULL)
-		luaL_typerror(L, index, MIDIOUT);
+		luaL_argerror(L, index, MIDIOUT);
 	ret = *midiout;
 	if(!ret)
 		luaL_error(L, "null RtMidiOut*");
@@ -163,7 +163,7 @@ static RtMidiIn* toMidiIn(lua_State *L, int index)
 {
 	RtMidiIn **midiin = (RtMidiIn**)lua_touserdata(L, index);
 	if(midiin == NULL)
-		luaL_typerror(L, index, MIDIIN);
+		luaL_argerror(L, index, MIDIIN);
 	return *midiin;
 }
 
@@ -174,7 +174,7 @@ static RtMidiIn* checkMidiIn(lua_State* L, int index)
 	luaL_checktype(L, index, LUA_TUSERDATA);
 	midiin = (RtMidiIn**)luaL_checkudata(L, index, MIDIIN);
 	if(midiin == NULL)
-		luaL_typerror(L, index, MIDIIN);
+		luaL_argerror(L, index, MIDIIN);
 	ret = *midiin;
 	if(!ret)
 		luaL_error(L, "null RtMidiIn*");
@@ -248,13 +248,13 @@ static int MidiOut_noteOn(lua_State *L)
 	RtMidiOut* midiout = checkMidiOut(L, 1);
 	if(lua_isnumber(L, 4))
 	message[0] = 144;
-	message[1] = luaL_checkint(L, 2);
+	message[1] = luaL_checkinteger(L, 2);
 	message[2] = 127;
 	if(lua_isnumber(L, 3))
 		message[2] = (unsigned char)lua_tonumber(L, 3);
 	if(lua_isnumber(L, 4))
 	{
-		int channel = luaL_checkint(L, 4);
+		int channel = luaL_checkinteger(L, 4);
 		if(!base0)
 			channel--;
 		if(channel < 0)
@@ -273,11 +273,11 @@ static int MidiOut_noteOff(lua_State *L)
 	message.resize(3);
 	RtMidiOut* midiout = checkMidiOut(L, 1);
 	message[0] = 144;
-	message[1] = luaL_checkint(L, 2);
+	message[1] = luaL_checkinteger(L, 2);
 	message[2] = 0;
 	if(lua_isnumber(L, 3))
 	{
-		int channel = luaL_checkint(L, 3);
+		int channel = luaL_checkinteger(L, 3);
 		if(!base0)
 			channel--;
 		if(channel < 0)
@@ -296,9 +296,9 @@ static int MidiOut_sendMessage(lua_State *L)
 	std::vector<unsigned char> message;
 	message.resize(3);
 	RtMidiOut* midiout = checkMidiOut(L, 1);
-	message[0] = luaL_checkint(L, 2);
-	message[1] = luaL_checkint(L, 3);
-	message[2] = luaL_checkint(L, 4);
+	message[0] = luaL_checkinteger(L, 2);
+	message[1] = luaL_checkinteger(L, 3);
+	message[2] = luaL_checkinteger(L, 4);
 
 	midiout->sendMessage(&message);
 	return 0;
@@ -309,14 +309,14 @@ static int MidiOut_sendMessage(lua_State *L)
 
 static int luamidi_openout(lua_State* L)
 {
-	int port = luaL_checkint(L, 1);
+	int port = luaL_checkinteger(L, 1);
 	pushMidiOut(L, OpenOut(L, port));
 	return 1;
 }
 
 static int luamidi_openin(lua_State* L)
 {
-	int port = luaL_checkint(L, 1);
+	int port = luaL_checkinteger(L, 1);
 	pushMidiIn(L, OpenIn(L, port));
 	return 1;
 }
@@ -339,16 +339,16 @@ static int luamidi_noteOn(lua_State *L)
 {
 	std::vector<unsigned char> message;
 	message.resize(3);
-	int port = luaL_checkint(L, 1);
+	int port = luaL_checkinteger(L, 1);
 	RtMidiOut* midiout = OpenOut(L, port);
 	message[0] = 144;
-	message[1] = luaL_checkint(L, 2);
+	message[1] = luaL_checkinteger(L, 2);
 	message[2] = 127;
 	if(lua_isnumber(L, 3))
 		message[2] = (unsigned char)lua_tonumber(L, 3);
 	if(lua_isnumber(L, 4))
 	{
-		int channel = luaL_checkint(L, 4);
+		int channel = luaL_checkinteger(L, 4);
 		if(!base0)
 			channel--;
 		if(channel < 0)
@@ -366,14 +366,14 @@ static int luamidi_noteOff(lua_State *L)
 {
 	std::vector<unsigned char> message;
 	message.resize(3);
-	int port = luaL_checkint(L, 1);
+	int port = luaL_checkinteger(L, 1);
 	RtMidiOut* midiout = OpenOut(L, port);
 	message[0] = 144;
-	message[1] = luaL_checkint(L, 2);
+	message[1] = luaL_checkinteger(L, 2);
 	message[2] = 0;
 	if(lua_isnumber(L, 3))
 	{
-		int channel = luaL_checkint(L, 3);
+		int channel = luaL_checkinteger(L, 3);
 		if(!base0)
 			channel--;
 		if(channel < 0)
@@ -390,15 +390,15 @@ static int luamidi_sendMessage(lua_State *L)
 {
 	std::vector<unsigned char> message;
 	message.resize(3);
-	int port = luaL_checkint(L, 1);
+	int port = luaL_checkinteger(L, 1);
 	RtMidiOut* midiout = OpenOut(L, port);
-	message[0] = luaL_checkint(L, 2);
-	message[1] = luaL_checkint(L, 3);
-	message[2] = luaL_checkint(L, 4);
+	message[0] = luaL_checkinteger(L, 2);
+	message[1] = luaL_checkinteger(L, 3);
+	message[2] = luaL_checkinteger(L, 4);
 	
 	if(lua_isnumber(L, 5))
 	{
-		int channel = luaL_checkint(L, 5);
+		int channel = luaL_checkinteger(L, 5);
 		if(!base0)
 			channel--;
 		if(channel < 0)
@@ -416,7 +416,7 @@ static int luamidi_getMessage(lua_State *L)
 {
 //	cout << "getting..." << endl;
 	std::vector<unsigned char> message;
-	int port = luaL_checkint(L, 1);
+	int port = luaL_checkinteger(L, 1);
 	RtMidiIn* midiin = OpenIn(L, port);
 	double delta = midiin->getMessage(&message);
 	if(message.size() == 3)
@@ -488,7 +488,7 @@ static int luamidi_enumerateinports (lua_State *L)
 // takes in a port number and returns the port's name
 static int luamidi_getInPortName(lua_State *L)
 {
-	int port = luaL_checkint(L, 1);
+	int port = luaL_checkinteger(L, 1);
 	RtMidiIn* midi = getGenericInput();
 	if(port < midi->getPortCount())
 		lua_pushstring(L, midi->getPortName(port).c_str());
@@ -500,7 +500,7 @@ static int luamidi_getInPortName(lua_State *L)
 // takes in a port number and returns the port's name
 static int luamidi_getOutPortName(lua_State *L)
 {
-	int port = luaL_checkint(L, 1);
+	int port = luaL_checkinteger(L, 1);
 	RtMidiOut* midi = getGenericOutput();
 	if(port < midi->getPortCount())
 		lua_pushstring(L, midi->getPortName(port).c_str());
@@ -559,7 +559,7 @@ static void set_info (lua_State *L)
 }
 
 // these are methods that the library provides
-static const struct luaL_reg luamidi_methods [] =
+static const struct luaL_Reg luamidi_methods [] =
 {
 	{"getoutportcount",	luamidi_getoutportcount},
 	{"getinportcount",	luamidi_getinportcount},
@@ -580,7 +580,7 @@ static const struct luaL_reg luamidi_methods [] =
 };
 
 // these are the methods that MidiOut objects have
-static const luaL_reg MidiOut_meta[] = 
+static const luaL_Reg MidiOut_meta[] = 
 {
 	{"__gc",	MidiOut_gc},
 	{"noteOn",	MidiOut_noteOn},
@@ -594,13 +594,16 @@ static int MidiOut_register(lua_State* L)
 	luaL_newmetatable(L, MIDIOUT);
 	lua_pushliteral(L, "__index");
 	lua_newtable(L);
-	luaL_openlib(L, 0, MidiOut_meta, 0);
+	//luaL_openlib(L, 0, MidiOut_meta, 0);
+
+	luaL_setfuncs(L, MidiOut_meta, 0);
+	
 	lua_rawset(L, -3);
 	lua_pop(L, 1);
 	return 1;
 }
 
-static const luaL_reg MidiIn_meta[] = 
+static const luaL_Reg MidiIn_meta[] = 
 {
 	{"__gc",	MidiIn_gc},
 //	{"getMessage",	MidiIn_getMessage},
@@ -612,7 +615,10 @@ static int MidiIn_register(lua_State* L)
 	luaL_newmetatable(L, MIDIIN);
 	lua_pushliteral(L, "__index");
 	lua_newtable(L);
-	luaL_openlib(L, 0, MidiIn_meta, 0);
+	//luaL_openlib(L, 0, MidiIn_meta, 0);
+
+	luaL_setfuncs(L, MidiIn_meta, 0);	
+	
 	lua_rawset(L, -3);
 	lua_pop(L, 1);
 	return 1;
@@ -623,12 +629,13 @@ extern "C"
 
 int luaopen_luamidi (lua_State *L)
 {
-	MidiOut_register(L);
+ 	MidiOut_register(L);
 	MidiIn_register(L);
+	
+	//luaL_openlib (L, "luamidi", luamidi_methods, 0);
 
-	luaL_openlib (L, "luamidi", luamidi_methods, 0);
-	set_info (L);
-
+        luaL_newlib(L, luamidi_methods);
+	
 	return 1;
 }
 
