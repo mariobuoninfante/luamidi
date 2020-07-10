@@ -6,13 +6,13 @@ local luamidi = require("luamidi")
 ----------------------
 
 io.write("INPUT PORTS\n---\n")
-for k, v in ipairs(luamidi.enumerateinports()) do
+for k, v in pairs(luamidi.enumerateinports()) do
    io.write(string.format("%d\t%s\n",k, v))
 end
 io.write("---\n")
 
 io.write("\nOUTPUT PORTS\n---\n")
-for k, v in ipairs(luamidi.enumerateoutports()) do
+for k, v in pairs(luamidi.enumerateoutports()) do
    io.write(string.format("%d\t%s\n",k, v))
 end
 io.write("---\n")
@@ -23,8 +23,8 @@ io.write("---\n")
 -- SEND MIDI --
 ---------------
 
-local inport = 4
-local outport = 4
+local inport = 0
+local outport = 0
 local midiout = luamidi.openout(outport)
 
 -- pitch, vel, channel (0 index)
