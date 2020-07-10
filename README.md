@@ -1,4 +1,4 @@
-# luamidi - Lua 5.3 bindings for RtMidi
+# luamidi - Lua 5.3 binding for RtMidi
 ### based on https://github.com/dwiel/luamidi
 
 ## Info
